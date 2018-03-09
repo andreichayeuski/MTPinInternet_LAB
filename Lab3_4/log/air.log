@@ -1,0 +1,7 @@
+09.03.2018  19:57:50 [main] INFO  com.company.Main  - Starting program_______________________
+09.03.2018  19:57:50 [main] INFO  com.company.Main  - Create Dean(singleton)
+09.03.2018  19:57:50 [main] INFO  com.company.Main  - Create first(Course) by FactoryMethod
+09.03.2018  19:57:50 [main] INFO  com.company.Main  - Create and add students to course
+09.03.2018  19:57:50 [main] INFO  com.company.Main  - Counter of courses
+09.03.2018  19:57:50 [main] INFO  com.company.Main  - Sorting by name
+09.03.2018  19:57:50 [main] INFO  com.company.Main  - End Program___________
