@@ -6,8 +6,8 @@ public class Street {
     private ArrayDeque<Car> firstDirection;
     private ArrayDeque<Car> secondDirection;
     public int streetSize;
-    static int countOfCars = 1;
-    static boolean selectDirection = true;
+    static int countOfCars = 0;
+    static boolean selectDirection;
 
     public Street(int size, int count)
     {
@@ -16,36 +16,30 @@ public class Street {
         secondDirection = new ArrayDeque<Car>(count);
     }
 
-    public synchronized void crossTheRoad(boolean flag)
+    public synchronized void driveAway()
     {
         String line = new String();
-        boolean canDriveAway = false;
-        while (!canDriveAway)
-        {
-            if (this.countOfCars > this.streetSize || this.checkDirection(flag))
-            {
-                selectDirection = !selectDirection;
-                this.countOfCars = 1;
-            }
-
         Car car = null;
-        if (flag == selectDirection)
-        {
-            this.countOfCars++;
-            car = getCar(selectDirection);
+        car = getCar(selectDirection);
+        if (car == null) {
+            line = "\nDon't have auto";
         }
-
-        if (car == null)
-        {
-            line = "Don't have auto";
-        }
-        else
-        {
+        else {
             line = car.getCarsName() + " is left";
-            canDriveAway = true;
-        }
+            this.countOfCars++;
         }
         System.out.println(line);
+    }
+
+    public synchronized void crossTheRoad() {
+        showStreet();
+        if ((this.countOfCars >= this.streetSize || this.checkDirection(selectDirection)) && !this.checkDirection(!selectDirection))
+        {
+            selectDirection = !selectDirection;
+            this.countOfCars = 0;
+        }
+        System.out.println("count = " + this.countOfCars + ", direction " + (selectDirection?1:2));
+        driveAway();
     }
 
     public synchronized Car getCar(boolean flag)
@@ -84,7 +78,7 @@ public class Street {
 
     public synchronized Car getCarFromFirstDirection()
     {
-        if (this.checkCarInFirstDirection())
+        if (!this.checkCarInFirstDirection())
         {
             return this.firstDirection.pollFirst();
         }
@@ -96,8 +90,7 @@ public class Street {
 
     public synchronized Car getCarFromSecondDirection()
     {
-
-        if (this.checkCarInSecondDirection())
+        if (!this.checkCarInSecondDirection())
         {
             return this.secondDirection.pollFirst();
         }
@@ -109,12 +102,12 @@ public class Street {
 
     public synchronized boolean checkCarInFirstDirection()
     {
-        return !this.firstDirection.isEmpty();
+        return this.firstDirection.isEmpty();
     }
 
     public synchronized boolean checkCarInSecondDirection()
     {
-        return !this.secondDirection.isEmpty();
+        return this.secondDirection.isEmpty();
     }
 
     public synchronized void showStreet()

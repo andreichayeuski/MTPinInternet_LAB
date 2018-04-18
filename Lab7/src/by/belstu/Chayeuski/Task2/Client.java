@@ -6,31 +6,42 @@ import java.util.concurrent.TimeUnit;
 
 public class Client extends Thread {
     private String name;
-    private CallCenter callCenter;
+    private SkyCenter callCenter;
     private Semaphore semaphore;
-
-    public Client(CallCenter pCallCenter, Semaphore pSemaphore, int pName) {
+    private int priority;
+    private String age;
+    public Client(SkyCenter pSkyCenter, Semaphore pSemaphore, int pName, int pPriority) {
+        Random rand = new Random();
         this.name = String.valueOf(pName);
         this.semaphore = pSemaphore;
-        this.callCenter = pCallCenter;
+        this.callCenter = pSkyCenter;
+        if(rand.nextBoolean())
+        {
+            this.priority = Thread.MAX_PRIORITY;
+            this.age = "senior";
+        }
+        else{
+            this.priority = Thread.MIN_PRIORITY;
+            this.age = "young";
+        }
     }
 
     public String getClientName() {
-        return this.name;
+        return this.name + ", age " + this.age;
     }
 
     @Override
     public void run() {
         Random rand = new Random();
-        int waitingTime = rand.nextInt(600) + 100;
-        System.out.println("Client " + this.getName() + " calling..");
+        int waitingTime = rand.nextInt(50000) + 100;
+        System.out.println("Client " + this.getClientName() + " coming..");
 
         try {
             if (semaphore.tryAcquire(waitingTime, TimeUnit.MICROSECONDS)) {
                 System.out.println("Client " + this.getClientName() + " have a dialog");
                 callCenter.connect(this);
                 callCenter.showLines();
-                Thread.sleep(rand.nextInt(3000) + 500);
+                Thread.sleep(rand.nextInt(1000) + 500);
                 callCenter.disconnect(this);
                 semaphore.release();
                 System.out.println("Client " + this.getClientName() + " end dialog");

@@ -11,14 +11,12 @@ public class Car extends Thread {
     {
         this.carsName = String.valueOf(pCarName);
         this.street = pStreet;
-        System.out.println("Car " + this.carsName + " came");
     }
 
     @Override
     public void run()
     {
         synchronized (street) {
-            street.showStreet();
                 boolean flag = random.nextBoolean();
                 if (flag) {
                     street.addCarToFirstDirection(this);
@@ -26,13 +24,11 @@ public class Car extends Thread {
                 else {
                     street.addCarToSecondDirection(this);
                 }
-                System.out.println("Car " + this.getCarsName() + " is on " + (flag?1:2) + " directory");
+                System.out.println("Car " + this.getCarsName() + " is on " + (flag?1:2) + " direction");
                 try
                 {
-                    street.wait(1000);
-                    synchronized (street) {
-                        street.crossTheRoad(flag);
-                    }
+                    street.wait(1500);
+                    street.crossTheRoad();
                 }
                 catch (InterruptedException e) {
                     e.printStackTrace();
